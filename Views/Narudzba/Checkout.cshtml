@@ -1,0 +1,73 @@
+﻿@model Flor.Models.Narudzba
+
+<h2>Potvrdi narudžbu</h2>
+
+<form asp-controller="Narudzba" asp-action="Checkout" method="post">
+    @Html.AntiForgeryToken()
+
+    
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <div class="mb-3">
+        <label asp-for="ImePrezime" class="form-label"></label>
+        <input asp-for="ImePrezime" class="form-control" />
+        <span asp-validation-for="ImePrezime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BrojMobitela" class="form-label"></label>
+        <input asp-for="BrojMobitela" class="form-control" />
+        <span asp-validation-for="BrojMobitela" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="NacinDostave" class="form-label"></label>
+        <select asp-for="NacinDostave" class="form-select">
+            <option value="Adresa">Dostava na adresu</option>
+            <option value="Preuzimanje">Osobno preuzimanje</option>
+        </select>
+        <span asp-validation-for="NacinDostave" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Adresa" class="form-label"></label>
+        <input asp-for="Adresa" class="form-control" />
+        <span asp-validation-for="Adresa" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DatumIsporuke" class="form-label"></label>
+        <input asp-for="DatumIsporuke" class="form-control" type="date" />
+        <span asp-validation-for="DatumIsporuke" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Napomena" class="form-label"></label>
+        <textarea asp-for="Napomena" class="form-control"></textarea>
+        <span asp-validation-for="Napomena" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Pošalji narudžbu</button>
+
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

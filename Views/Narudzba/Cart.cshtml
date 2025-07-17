@@ -1,0 +1,48 @@
+﻿@model List<Flor.Models.CartItem>
+
+@inject Flor.Data.ApplicationDbContext Context
+
+
+@{
+    ViewData["Title"] = "Košarica";
+}
+
+<h2>Vaša košarica</h2>
+
+@if (!Model.Any())
+{
+    <p>Košarica je prazna.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Buket</th>
+                <th>Veličina</th>
+                <th>Količina</th>
+                <th>Akcija</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var buket = Context.Buketi.FirstOrDefault(b => b.Id == item.BuketId);
+                <tr>
+                    <td>@buket?.Naziv</td>
+                    <td>@item.Velicina</td>
+                    <td>@item.Kolicina</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post" asp-controller="Narudzba">
+                            <input type="hidden" name="buketId" value="@item.BuketId" />
+                            <input type="hidden" name="velicina" value="@item.Velicina" />
+                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Checkout" class="btn btn-success">Nastavi na plaćanje</a>
+}

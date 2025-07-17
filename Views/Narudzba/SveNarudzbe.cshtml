@@ -1,0 +1,47 @@
+﻿@model List<Flor.Models.Narudzba>
+
+<h2 class="mb-4">Sve narudžbe</h2>
+
+@foreach (var narudzba in Model)
+{
+    <div class="border rounded p-3 mb-4 shadow-sm">
+        <h5>📦 Narudžba #@narudzba.Id - @narudzba.ImePrezime</h5>
+        <p><strong>Email:</strong> @narudzba.Email</p>
+        <p><strong>Datum isporuke:</strong> @narudzba.DatumIsporuke.ToShortDateString()</p>
+        <p><strong>Dostava:</strong> @narudzba.NacinDostave</p>
+        <p><strong>Adresa:</strong> @narudzba.Adresa</p>
+        <p><strong>Broj mobitela:</strong> @narudzba.BrojMobitela</p>
+        <p><strong>Ukupna cijena:</strong> @narudzba.UkupnaCijena kn</p>
+        <p><strong>Napomena:</strong> @narudzba.Napomena</p>
+
+        <h6 class="mt-3">Stavke narudžbe:</h6>
+        <ul>
+            @foreach (var stavka in narudzba.Stavke)
+            {
+                <li>
+                    Buket ID: @stavka.BuketId |
+                    Veličina: @stavka.Velicina |
+                    Količina: @stavka.Kolicina |
+                    Cijena: @stavka.Cijena kn
+                </li>
+            }
+        </ul>
+        @if (!narudzba.Obavljeno)
+        {
+            <form asp-action="OznaciKaoObavljeno" asp-route-id="@narudzba.Id" method="post" class="mt-2">
+                <button type="submit" class="btn btn-success btn-sm">Označi kao obavljeno</button>
+            </form>
+        }
+        else
+        {
+            <span class="badge bg-secondary mt-2">✔️ Obavljeno</span>
+        }
+
+
+        
+        <form asp-action="Obrisi" method="post" onsubmit="return confirm('Jeste li sigurni da želite obrisati ovu narudžbu?');">
+            <input type="hidden" name="id" value="@narudzba.Id" />
+            <button type="submit" class="btn btn-danger btn-sm mt-2">Obriši narudžbu</button>
+        </form>
+    </div>
+}

@@ -1,0 +1,57 @@
+﻿@model Flor.Models.Narudzba
+
+@{
+    ViewData["Title"] = "Potvrda narudžbe";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Hvala na narudžbi, @Model.ImePrezime!</h2>
+    <p class="text-center">Vaša narudžba je uspješno zaprimljena i uskoro će biti obrađena.</p>
+
+    <hr />
+
+    <h4>Podaci o narudžbi:</h4>
+    <ul>
+        <li><strong>Email:</strong> @Model.Email</li>
+        <li><strong>Način dostave:</strong> @Model.NacinDostave</li>
+        @if (Model.NacinDostave == "Adresa")
+        {
+            <li><strong>Adresa:</strong> @Model.Adresa</li>
+        }
+        <li><strong>Datum isporuke:</strong> @Model.DatumIsporuke.ToShortDateString()</li>
+        <li><strong>Napomena:</strong> @Model.Napomena</li>
+    </ul>
+
+    <h4>Stavke narudžbe:</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Buket</th>
+                <th>Veličina</th>
+                <th>Količina</th>
+                <th>Cijena po komadu</th>
+                <th>Ukupno</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model.Stavke)
+            {
+                var naziv = Model.Stavke.FirstOrDefault(st => st.BuketId == s.BuketId)?.Buket?.Naziv ?? "Buket";
+                <tr>
+                    <td>@naziv</td>
+                    <td>@s.Velicina</td>
+                    <td>@s.Kolicina</td>
+                    <td>@s.Cijena.ToString("0.00") €</td>
+                    <td>@(s.Cijena * s.Kolicina).ToString("0.00") €</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h5 class="text-end"><strong>Ukupno:</strong> @Model.UkupnaCijena.ToString("0.00") €</h5>
+
+    <div class="text-center mt-4">
+        <a href="@Url.Action("Index", "Buketi")" class="btn btn-success">Povratak na ponudu</a>
+
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Kontakt";
+}
+
+<h2>Kontaktirajte nas</h2>
+
+<p>Ispunite obrazac i javit ćemo vam se u najkraćem roku.</p>
+
+<div id="poruka-status" style="display:none;" class="mt-3"></div>
+
+<form id="kontakt-forma" name="kontakt-forma">
+
+    <div class="form-group">
+        <label for="ime">Ime i prezime:</label>
+        <input type="text" id="ime" name="ime" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email adresa:</label>
+        <input type="email" id="email" name="email" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="telefon">Broj mobitela (neobavezno):</label>
+        <input type="tel" id="telefon" name="telefon" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="povod">Povod vašeg upita:</label>
+        <select id="povod" name="povod" class="form-control" required>
+            <option value="" disabled selected>-- Odaberite povod --</option>
+            <option value="Rođendan">Rođendan</option>
+            <option value="Vjenčanje">Vjenčanje</option>
+            <option value="Zahvala">Zahvala</option>
+            <option value="Ostalo">Ostalo</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="poruka">Vaša poruka:</label>
+        <textarea id="poruka" name="poruka" class="form-control" rows="5" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Pošalji</button>
+</form>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script>
+        (function () {
+            emailjs.init("gneOBhB6vP7bfy1sy");
+        })();
+
+        document.getElementById("kontakt-forma").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            emailjs.sendForm("service_hp4zv11", "template_yp6nelt", this)
+                .then(function () {
+                    const poruka = document.getElementById("poruka-status");
+                    poruka.className = "alert alert-success";
+                    poruka.innerText = "Hvala na upiti, javit ćemo Vam se uskoro!";
+                    poruka.style.display = "block";
+                    document.getElementById("kontakt-forma").reset();
+                }, function (error) {
+                    const poruka = document.getElementById("poruka-status");
+                    poruka.className = "alert alert-danger";
+                    poruka.innerText = "Došlo je do greške pri slanju. Pokušajte ponovno.";
+                    poruka.style.display = "block";
+                    console.error("Greška:", error);
+                });
+        });
+    </script>
+}

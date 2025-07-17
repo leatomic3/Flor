@@ -1,0 +1,56 @@
+﻿@model Flor.Models.Buket
+
+@{
+    ViewData["Title"] = "Uredi buket";
+}
+
+<h2>Uredi buket</h2>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Naziv" class="control-label"></label>
+        <input asp-for="Naziv" class="form-control" />
+        <span asp-validation-for="Naziv" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Opis" class="control-label"></label>
+        <textarea asp-for="Opis" class="form-control"></textarea>
+        <span asp-validation-for="Opis" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SlikaUrl" class="control-label"></label>
+        <input asp-for="SlikaUrl" class="form-control" />
+        <span asp-validation-for="SlikaUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CijenaMali" class="control-label">Cijena za mali buket</label>
+        <input asp-for="CijenaMali" class="form-control" />
+        <span asp-validation-for="CijenaMali" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CijenaSrednji" class="control-label">Cijena za srednji buket</label>
+        <input asp-for="CijenaSrednji" class="form-control" />
+        <span asp-validation-for="CijenaSrednji" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CijenaVeliki" class="control-label">Cijena za veliki buket</label>
+        <input asp-for="CijenaVeliki" class="form-control" />
+        <span asp-validation-for="CijenaVeliki" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Spremi izmjene</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Natrag</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

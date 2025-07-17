@@ -1,0 +1,26 @@
+﻿@model Flor.Models.Buket
+
+@{
+    ViewData["Title"] = "Obriši buket";
+}
+
+<h2 class="text-center mt-4 mb-4" style="color: #d9534f; font-weight: 700;">Obriši buket</h2>
+
+<h4>Jeste li sigurni da želite obrisati ovaj buket?</h4>
+
+<div class="card mb-4" style="max-width: 600px;">
+    <img src="@Model.SlikaUrl" class="card-img-top" alt="@Model.Naziv" style="height: 250px; object-fit: cover; border-radius: 16px 16px 0 0;" />
+    <div class="card-body">
+        <h5 class="card-title">@Model.Naziv</h5>
+        <p class="card-text">@Model.Opis</p>
+        <p><strong>Cijena mali:</strong> @Model.CijenaMali.ToString("0.00") €</p>
+        <p><strong>Cijena srednji:</strong> @Model.CijenaSrednji.ToString("0.00") €</p>
+        <p><strong>Cijena veliki:</strong> @Model.CijenaVeliki.ToString("0.00") €</p>
+    </div>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Obriši</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Odustani</a>
+</form>
