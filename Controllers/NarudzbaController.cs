@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Flor.Controllers
 {
@@ -31,10 +32,31 @@ namespace Flor.Controllers
 
             return JsonConvert.DeserializeObject<List<CartItem>>(sessionCart);
         }
+        [Authorize]
+        public IActionResult Cart()
+        {
+            var cart = GetCart(); 
+            return View(cart);    
+        }
+        public int GetCartCount()
+        {
+            var cart = GetCart();
+            return cart.Sum(item => item.Kolicina);
+        }
 
         private void SaveCart(List<CartItem> cart)
         {
             HttpContext.Session.SetString(CartSessionKey, JsonConvert.SerializeObject(cart));
+        }
+
+        [Authorize]
+        public IActionResult Odabir(int id)
+        {
+            var buket = _context.Buketi.FirstOrDefault(b => b.Id == id);
+            if (buket == null)
+                return NotFound();
+
+            return View(buket);
         }
 
         [HttpPost]
@@ -77,7 +99,8 @@ namespace Flor.Controllers
             }
 
             SaveCart(cart);
-            return RedirectToAction("Cart");
+            TempData["Uspjeh"] = "Buket je dodan u košaricu!";
+            return RedirectToAction("Index", "Buketi");
         }
 
         [HttpPost]
@@ -93,21 +116,37 @@ namespace Flor.Controllers
             return RedirectToAction("Cart");
         }
 
-        [Authorize]
-        public IActionResult Cart()
+        [HttpPost]
+        public IActionResult UpdateKolicina(int buketId, string velicina, int novaKolicina)
         {
             var cart = GetCart();
-            return View(cart);
+            var item = cart.FirstOrDefault(x => x.BuketId == buketId && x.Velicina == velicina);
+
+            if (item != null && novaKolicina > 0)
+            {
+                item.Kolicina = novaKolicina;
+                SaveCart(cart);
+            }
+
+            return RedirectToAction("Cart");
         }
 
         [Authorize]
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout()
         {
             var cart = GetCart();
             if (cart == null || !cart.Any())
                 return RedirectToAction("Index", "Buketi");
 
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+
+            var model = new Narudzba
+            {
+                Email = user?.Email,
+                BrojMobitela = user?.PhoneNumber
+            };
+
+            return View(model);
         }
 
         [Authorize]
@@ -124,11 +163,20 @@ namespace Flor.Controllers
                 return View(narudzba);
             }
 
-            if (narudzba.DatumIsporuke < DateTime.Today)
+            // ➤ Validacija datuma
+            if (narudzba.DatumIsporuke == default(DateTime))
+            {
+                ModelState.AddModelError("DatumIsporuke", "Molimo odaberite datum isporuke.");
+            }
+            else if (narudzba.DatumIsporuke < DateTime.Today)
+            {
                 ModelState.AddModelError("DatumIsporuke", "Datum isporuke ne može biti u prošlosti.");
+            }
 
             if (narudzba.NacinDostave == "Adresa" && string.IsNullOrWhiteSpace(narudzba.Adresa))
+            {
                 ModelState.AddModelError("Adresa", "Molimo unesite adresu dostave.");
+            }
 
             if (!ModelState.IsValid)
                 return View(narudzba);
@@ -220,7 +268,6 @@ namespace Flor.Controllers
             return RedirectToAction("SveNarudzbe");
         }
 
-        
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult OznaciKaoObavljeno(int id)

@@ -1,48 +1,75 @@
 ﻿@model List<Flor.Models.CartItem>
-
-@inject Flor.Data.ApplicationDbContext Context
-
+@inject Flor.Data.ApplicationDbContext Db 
 
 @{
     ViewData["Title"] = "Košarica";
+    decimal ukupno = 0;
 }
 
-<h2>Vaša košarica</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">🛒 Vaša košarica</h2>
 
-@if (!Model.Any())
-{
-    <p>Košarica je prazna.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Buket</th>
-                <th>Veličina</th>
-                <th>Količina</th>
-                <th>Akcija</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                var buket = Context.Buketi.FirstOrDefault(b => b.Id == item.BuketId);
+    <a asp-controller="Buketi" asp-action="Index" class="btn btn-outline-primary mb-3">← Natrag na ponudu</a>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Vaša košarica je prazna.</div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead class="table-success text-center">
                 <tr>
-                    <td>@buket?.Naziv</td>
-                    <td>@item.Velicina</td>
-                    <td>@item.Kolicina</td>
-                    <td>
-                        <form asp-action="RemoveFromCart" method="post" asp-controller="Narudzba">
-                            <input type="hidden" name="buketId" value="@item.BuketId" />
-                            <input type="hidden" name="velicina" value="@item.Velicina" />
-                            <button type="submit" class="btn btn-danger btn-sm">Ukloni</button>
-                        </form>
-                    </td>
+                    <th>Buket</th>
+                    <th>Veličina</th>
+                    <th>Količina</th>
+                    <th>Cijena po kom</th>
+                    <th>Ukupno</th>
+                    <th>Akcija</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var buket = Db.Buketi.FirstOrDefault(b => b.Id == item.BuketId);  
+                    if (buket == null) continue;
 
-    <a asp-action="Checkout" class="btn btn-success">Nastavi na plaćanje</a>
-}
+                    decimal cijenaPoKomadu = item.Cijena;
+                    decimal cijenaUkupno = cijenaPoKomadu * item.Kolicina;
+                    ukupno += cijenaUkupno;
+
+                    <tr class="align-middle text-center">
+                        <td>@buket.Naziv</td>
+                        <td>@item.Velicina</td>
+                        <td>
+                            <form asp-action="UpdateKolicina" asp-controller="Narudzba" method="post" class="d-flex justify-content-center align-items-center">
+                                <input type="hidden" name="buketId" value="@item.BuketId" />
+                                <input type="hidden" name="velicina" value="@item.Velicina" />
+                                <input type="number" name="novaKolicina" value="@item.Kolicina" min="1"
+                                       class="form-control form-control-sm me-2 text-center" style="width: 70px;" />
+                                <button type="submit" class="btn btn-sm btn-success">✔</button>
+                            </form>
+                        </td>
+                        <td>@cijenaPoKomadu.ToString("0.00") €</td>
+                        <td>@cijenaUkupno.ToString("0.00") €</td>
+                        <td>
+                            <form asp-action="RemoveFromCart" asp-controller="Narudzba" method="post">
+                                <input type="hidden" name="buketId" value="@item.BuketId" />
+                                <input type="hidden" name="velicina" value="@item.Velicina" />
+                                <button type="submit" class="btn btn-sm btn-danger">🗑 Ukloni</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h4 class="text-end mt-3 me-2 text-success">
+            Ukupno za platiti: <strong>@ukupno.ToString("0.00") €</strong>
+        </h4>
+
+        <div class="text-end mt-3">
+            <a asp-action="Checkout" class="btn btn-success btn-lg px-4">✅ Nastavi na plaćanje</a>
+        </div>
+    }
+</div>

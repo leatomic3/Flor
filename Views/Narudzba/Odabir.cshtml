@@ -1,0 +1,44 @@
+﻿@model Flor.Models.Buket
+
+@{
+    ViewData["Title"] = "Odabir buketa";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm" style="border-radius: 16px; background-color: #f9fff9;">
+                <img src="@Model.SlikaUrl" class="card-img-top" alt="@Model.Naziv"
+                     style="height: 300px; object-fit: cover; border-radius: 16px 16px 0 0;" />
+
+                <div class="card-body">
+                    <h3 class="card-title text-success fw-bold">@Model.Naziv</h3>
+                    <p class="card-text">@Model.Opis</p>
+
+                    <form asp-controller="Narudzba" asp-action="AddToCart" method="post" class="mt-4">
+                        <input type="hidden" name="buketId" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label for="velicina" class="form-label">Odaberite veličinu:</label>
+                            <select class="form-select" id="velicina" name="velicina" required>
+                                <option value="S">S (mali) - @Model.CijenaMali.ToString("0.00") €</option>
+                                <option value="M">M (srednji) - @Model.CijenaSrednji.ToString("0.00") €</option>
+                                <option value="L">L (veliki) - @Model.CijenaVeliki.ToString("0.00") €</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="kolicina" class="form-label">Količina:</label>
+                            <input type="number" class="form-control" id="kolicina" name="kolicina" value="1" min="1" required />
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="@Url.Action("Index", "Buketi")" class="btn btn-outline-secondary">⬅ Natrag</a>
+                            <button type="submit" class="btn btn-success">Dodaj u košaricu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

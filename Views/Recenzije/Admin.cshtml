@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Flor.Models.Recenzija>
+
+@{
+    ViewData["Title"] = "Upravljanje recenzijama";
+}
+
+<h2 class="text-center my-4">Upravljanje recenzijama</h2>
+
+<table class="table table-striped table-bordered w-75 mx-auto">
+    <thead class="table-dark">
+        <tr>
+            <th>Ime</th>
+            <th>Ocjena</th>
+            <th>Sadržaj</th>
+            <th>Datum</th>
+            <th>Odobrena</th>
+            <th>Akcija</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.Ime</td>
+                <td>@r.Ocjena</td>
+                <td>@r.Sadrzaj</td>
+                <td>@r.Datum.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>
+                    @if (r.Odobrena)
+                    {
+                        <span class="text-success">✔</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">✘</span>
+                    }
+                </td>
+                <td>
+                    @if (!r.Odobrena)
+                    {
+                        <form asp-action="Odobri" method="post">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <button type="submit" class="btn btn-sm btn-success">Odobri</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Već odobreno</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

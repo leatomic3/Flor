@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Flor.Models.Recenzija>
+
+@{
+    ViewData["Title"] = "Recenzije korisnika";
+}
+
+<h2 class="text-center my-4">Recenzije korisnika</h2>
+
+<div class="container w-75">
+    @if (!Model.Any())
+    {
+        <p>Trenutno nema recenzija.</p>
+    }
+    else
+    {
+        @foreach (var recenzija in Model.Where(r => r.Odobrena))
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@recenzija.Ime</h5>
+                    <p>
+                        @{
+                            for (int i = 0; i < recenzija.Ocjena; i++)
+                            {
+                                @:<span style="color:gold;">&#9733;</span>
+                            }
+                            for (int i = recenzija.Ocjena; i < 5; i++)
+                            {
+                                @:<span style="color:lightgray;">&#9733;</span>
+                            }
+                        }
+                    </p>
+                    @if (!string.IsNullOrWhiteSpace(recenzija.Sadrzaj))
+                    {
+                        <p class="card-text">@recenzija.Sadrzaj</p>
+                    }
+                    <small class="text-muted">(@recenzija.Datum.ToString("dd.MM.yyyy."))</small>
+                </div>
+            </div>
+        }
+    }
+</div>

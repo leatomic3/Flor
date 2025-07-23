@@ -2,10 +2,109 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Dobrodošli u cvjećarnicu Flor</h1>
-    <p>Otkrijte našu ponudu buketa za svaku prigodu.</p>
-
-    <a href="/Buketi" class="btn btn-success mt-3">Pogledajte ponudu</a>
-
+<div class="hero-section">
+    <div class="overlay">
+        <div class="hero-content">
+            <h1>Dobrodošli u cvjećarnicu Flor</h1>
+            <p>Otkrijte našu ponudu buketa za svaku prigodu.</p>
+            <a href="/Buketi" class="btn btn-success mt-3">Pogledajte ponudu</a>
+        </div>
+    </div>
 </div>
+
+<section class="why-choose-us py-5" style="background-color: #f3fef4;">
+    <div class="container text-center">
+        <h2 class="mb-4">Zašto izabrati nas?</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="feature-box p-3 rounded shadow-sm bg-white h-100">
+                    <div class="icon fs-2 mb-2">🌼</div>
+                    <h5>Svježe cvijeće</h5>
+                    <p>Svaki buket je izrađen od pažljivo odabranog i svježeg cvijeća.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box p-3 rounded shadow-sm bg-white h-100">
+                    <div class="icon fs-2 mb-2">🚚</div>
+                    <h5>Brza dostava</h5>
+                    <p>Dostavljamo unutar nekoliko sati u Zagrebu i okolici.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="feature-box p-3 rounded shadow-sm bg-white h-100">
+                    <div class="icon fs-2 mb-2">🎁</div>
+                    <h5>Personalizirani buketi</h5>
+                    <p>Prilagodite poruku i izgled buketa za posebne prilike.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model is List<Flor.Models.Recenzija> recenzije && recenzije.Any())
+{
+    var sortiraneRecenzije = recenzije
+        .Where(r => r.Odobrena)
+        .OrderByDescending(r => r.Datum)
+        .ToList();
+
+    <section class="reviews-section py-5" style="background-color: #f9fdf9;">
+        <div class="container text-center">
+            <h2 class="mb-4">Recenzije kupaca</h2>
+            <div id="recenzijeContainer" class="position-relative">
+                @for (int i = 0; i < sortiraneRecenzije.Count; i++)
+                {
+                    var rec = sortiraneRecenzije[i];
+                    <div class="review-card card p-4 shadow-sm mb-3 border-0" style="border-radius: 16px; background-color: #ffffff; display:@(i == 0 ? "block" : "none")">
+                        <h5 class="text-success">@rec.Ime</h5>
+                        <p class="text-warning mb-2">
+                            @for (int star = 1; star <= rec.Ocjena; star++)
+                            {
+                                <span>&#9733;</span>
+                            }
+                        </p>
+                        @if (!string.IsNullOrEmpty(rec.Sadrzaj))
+                        {
+                            <p>"@rec.Sadrzaj"</p>
+                        }
+                    </div>
+                }
+
+                @if (sortiraneRecenzije.Count > 1)
+                {
+                    <button id="nextRecenzija" class="btn btn-outline-success position-absolute end-0 bottom-0 mb-2 me-2">
+                        ➤
+                    </button>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section py-5">
+        <div class="container text-center">
+            <h2 class="mb-4">Naša lokacija</h2>
+            <div class="ratio ratio-16x9">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d44496.585671349036!2d15.8995923!3d45.8105253!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765d6e19cf76abd%3A0x1527331b28c229a3!2sUl.%20Vladimira%20Nazora%202%2C%2010000%2C%20Zagreb!5e0!3m2!1shr!2shr!4v1753266578185!5m2!1shr!2shr"
+                        width="100%" height="450" style="border:0;" allowfullscreen=""
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const recenzije = document.querySelectorAll(".review-card");
+            const button = document.getElementById("nextRecenzija");
+            let current = 0;
+
+            button?.addEventListener("click", () => {
+                recenzije[current].style.display = "none";
+                current = (current + 1) % recenzije.length;
+                recenzije[current].style.display = "block";
+            });
+        });
+    </script>
+}

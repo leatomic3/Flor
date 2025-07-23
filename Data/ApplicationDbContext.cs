@@ -16,5 +16,7 @@ namespace Flor.Data
         public DbSet<Narudzba> Narudzbe { get; set; }
         public DbSet<NarudzbaStavka> NarudzbaStavke { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Recenzija> Recenzije { get; set; }
+
     }
 }

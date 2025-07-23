@@ -17,10 +17,12 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Flor</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
@@ -33,18 +35,35 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Kontakt">Kontakt</a>
                         </li>
 
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item position-relative">
+                                <a class="nav-link text-dark position-relative" asp-controller="Narudzba" asp-action="Cart">
+                                    🛒
+                                    @await Component.InvokeAsync("CartCount")
+                                </a>
+                            </li>
+                        }
+
                         @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Narudzba" asp-action="SveNarudzbe">Sve narudžbe</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Recenzije" asp-action="Admin">Recenzije</a>
+                            </li>
                         }
                     </ul>
-                    <partial name="_LoginPartial" />
+
+                    <ul class="navbar-nav">
+                        <partial name="_LoginPartial" />
+                    </ul>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

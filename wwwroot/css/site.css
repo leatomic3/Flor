@@ -39,3 +39,125 @@ body {
         color: #1b5e20;
     }
 
+.hero-section {
+    background-image: url('/slike/hero-flower.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5); 
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+.why-choose-us {
+    background-color: #f8f9fa;
+}
+
+.feature-box {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
+
+    .feature-box:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature-box .icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+.bouquet-sizes {
+    background-color: #fff;
+}
+
+.size-card {
+    background-color: #f4f4f4;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+    .size-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .size-card img {
+        max-height: 220px;
+        object-fit: cover;
+    }
+.star-rating {
+    direction: ltr;
+    unicode-bidi: bidi-override;
+    display: flex;
+    gap: 5px;
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.star {
+    color: #ccc; 
+    transition: color 0.2s;
+}
+
+    .star.selected {
+        color: gold;
+    }
+/* Stil za ikonu košarice */
+.nav-item.position-relative {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+@media (min-width: 768px) {
+    .navbar-collapse .navbar-nav:first-child {
+        flex: 1;
+    }
+
+    .navbar-collapse .navbar-nav:last-child {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .nav-item.position-relative {
+        order: 2;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .nav-item.position-relative {
+        order: -1;
+        margin-right: auto;
+    }
+}
+
